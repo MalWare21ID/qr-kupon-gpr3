@@ -35,7 +35,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center p-4 font-sans">
   <header class="w-full max-w-xl text-center mb-6">
-    <h1 class="text-3xl font-bold text-indigo-700">Scan Kupon Idul Adha GPR3</h1>
+    <h1 class="text-3xl font-bold text-indigo-700">scan Kupon Idul Adha GPR3</h1>
   </header>
 
   <main class="w-full max-w-xl bg-white rounded-lg shadow p-6 space-y-6">
@@ -44,12 +44,7 @@
       <h2 class="text-xl font-semibold mb-2 text-indigo-600 flex items-center gap-2">
         <i class="fas fa-qrcode"></i> Scan QR Code
       </h2>
-      
-<div class="mb-3 text-center">
-  <label for="camera-select" class="block text-sm font-medium text-gray-700 mb-1">Pilih Kamera</label>
-  <select id="camera-select" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"></select>
-</div>
-<div class="flex justify-center mb-3">
+      <div class="flex justify-center mb-3">
         <button
           id="btn-toggle-scan"
           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2"
@@ -194,45 +189,41 @@
     let html5QrCode = null;
     let scanning = false;
 
-    
-async function startScanner() {
-  if (scanning) return;
-  html5QrCode = new Html5Qrcode("reader");
-  const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-    const coupons = loadCoupons();
-    const exists = coupons.find((c) => c.code === decodedText);
-    if (!decodedText.startsWith("GPR3-")) {
-      showMessage("QR Code tidak valid", "error");
-      return;
-    } else if (exists) {
-      showMessage("Kupon sudah digunakan", "error");
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    } else {
-      coupons.push({ code: decodedText, time: new Date().toISOString(), sentToGoogle: false });
-      saveCoupons(coupons);
-      renderCoupons();
-      showMessage("Kupon berhasil dicatat", "success");
-      if (navigator.vibrate) navigator.vibrate(200);
-    }
-  };
+    async function startScanner() {
+      if (scanning) return;
+      html5QrCode = new Html5Qrcode("reader");
+      const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        const coupons = loadCoupons();
+        const exists = coupons.find((c) => c.code === decodedText);
+        if (!decodedText.startsWith("GPR3-")) {
+          showMessage("QR Code tidak valid", "error"); return;
+        } else if (exists) {
+          showMessage("Kupon sudah digunakan", "error");
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        } else {
+          coupons.push({ code: decodedText, time: new Date().toISOString(), sentToGoogle: false });
+          saveCoupons(coupons);
+          renderCoupons();
+          showMessage("Kupon berhasil dicatat", "success");
+          if (navigator.vibrate) navigator.vibrate(200);
+        }
+      };
 
-  const config = {
-    fps: 10,
-    qrbox: 250,
-    videoConstraints: { facingMode: "environment" }
-  };
+      const config = { fps: 10, qrbox: 250 };
 
-  try {
-    await html5QrCode.start(config, qrCodeSuccessCallback);
-    scanning = true;
-    showMessage("Arahkan kamera ke QR Code untuk scan", "info");
-    document.getElementById("reader").classList.remove("hidden");
-    toggleScanButton(true);
-  } catch (err) {
-    showMessage("Error saat memulai kamera: " + err, "error");
-  }
-}
-
+      try {
+        const devices = await Html5Qrcode.getCameras();
+        if (devices && devices.length) {
+          let cameraId = devices[0].id;
+          for (const device of devices) {
+            if (device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("rear")) {
+              cameraId = device.id;
+              break;
+            }
+          }
+          
+          const selectedCamera = cameraId;
+          await html5QrCode.start(selectedCamera, config, qrCodeSuccessCallback);
     
           scanning = true;
           showMessage("Arahkan kamera ke QR Code untuk scan", "info");
