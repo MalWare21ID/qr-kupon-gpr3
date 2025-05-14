@@ -25,9 +25,174 @@
       border-radius: 8px;
     }
   </style>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  h1, h2 {
+    letter-spacing: -0.5px;
+  }
+
+  button {
+    transition: all 0.2s ease-in-out;
+  }
+
+  button:hover {
+    transform: scale(1.03);
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .rounded-section {
+    border-radius: 1rem;
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4f46e5;
+  }
+
+  .table-container {
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .qr-preview {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .qr-preview:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  #generated-qrcode > div {
+    flex: 1 1 150px;
+  }
+
+  #reader-modal {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 640px) {
+    .card {
+      padding: 1rem;
+    }
+  }
+</style>
+
+
+<style>
+  body {
+    font-family: 'Noto Sans', 'Segoe UI', Tahoma, sans-serif;
+    background-color: #fdfcf9;
+  }
+
+  h1, h2 {
+    font-family: 'Scheherazade New', serif;
+  }
+
+  h1 {
+    color: #1e7f5c;
+  }
+
+  .section-title {
+    font-family: 'Scheherazade New', serif;
+    color: #1e7f5c;
+  }
+
+  button {
+    background-color: #1e7f5c;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #166644;
+    transform: scale(1.03);
+  }
+
+  .bg-white {
+    background-color: #ffffff;
+    border: 1px solid #d1fae5;
+  }
+
+  .card, .qr-preview {
+    border-radius: 1rem;
+    border: 1px solid #d1fae5;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  #generated-qrcode > div {
+    flex: 1 1 150px;
+    background-color: #ecfdf5;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .viewfinder-box {
+    border-color: #10b981 !important;
+  }
+
+  thead {
+    background-color: #d1fae5;
+  }
+
+  #scanner-modal {
+    backdrop-filter: blur(3px);
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@600&display=swap" rel="stylesheet">
+
+
+<style>
+  .islamic-pattern {
+    background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  .header-decor {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Islamic_geometric_013.svg/2560px-Islamic_geometric_013.svg.png') no-repeat center;
+    background-size: contain;
+    height: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .footer-decor {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Islamic_geometric_004.svg/1920px-Islamic_geometric_004.svg.png') no-repeat center;
+    background-size: contain;
+    height: 100px;
+    margin-top: 2rem;
+    opacity: 0.5;
+  }
+</style>
+
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center p-4 font-sans">
-  <header class="w-full max-w-xl text-center mb-6">
+  
+<div class="header-decor w-full max-w-xl"></div>
+<header class="w-full max-w-xl text-center mb-6">
     <h1 class="text-3xl font-bold text-indigo-700">Scan Kupon Idul Adha GPR3</h1>
   </header>
 
@@ -282,5 +447,8 @@
 
     renderCoupons();
   </script>
+
+<div class="footer-decor w-full max-w-xl"></div>
+
 </body>
 </html>
