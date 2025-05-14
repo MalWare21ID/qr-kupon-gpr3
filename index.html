@@ -1,37 +1,30 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR Code Kupon GPR3 </title>
+  <title>QR Code Kupon GPR3</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
-    <style>
-      #reader {
-        position: relative;
-      }
-      .viewfinder-box {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 200px;
-        height: 200px;
-        margin-left: -100px;
-        margin-top: -100px;
-        border: 3px solid rgba(99, 102, 241, 0.8); /* indigo-500 */
-        box-sizing: border-box;
-        z-index: 10;
-        border-radius: 8px;
-      }
-    </style>
-    
+  <style>
+    .viewfinder-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      margin-left: -100px;
+      margin-top: -100px;
+      border: 3px solid rgba(99, 102, 241, 0.8);
+      box-sizing: border-box;
+      z-index: 10;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col items-center p-4 font-sans">
   <header class="w-full max-w-xl text-center mb-6">
@@ -45,15 +38,10 @@
         <i class="fas fa-qrcode"></i> Scan QR Code
       </h2>
       <div class="flex justify-center mb-3">
-        <button
-          id="btn-toggle-scan"
-          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2"
-        >
+        <button id="btn-toggle-scan" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
           <i class="fas fa-play"></i> Mulai Scan
         </button>
       </div>
-      <div id="reader" class="w-full rounded border border-gray-300 overflow-hidden hidden"><div class="viewfinder-box"></div></div>
-      <p id="scan-message" class="mt-2 text-center font-medium"></p>
     </section>
 
     <!-- Scanned Coupons List -->
@@ -78,22 +66,13 @@
 
     <!-- Export and Send Section -->
     <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <button
-        id="export-csv"
-        class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow"
-      >
+      <button id="export-csv" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
         <i class="fas fa-file-csv"></i> Export CSV
       </button>
-      <button
-        id="send-whatsapp"
-        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-      >
+      <button id="send-whatsapp" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
         <i class="fab fa-whatsapp"></i> Kirim CSV via WhatsApp
       </button>
-      <button
-        id="send-google"
-        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
-      >
+      <button id="send-google" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
         <i class="fas fa-cloud-upload-alt"></i> Kirim ke Google Sheets
       </button>
     </section>
@@ -104,26 +83,12 @@
         <i class="fas fa-qrcode"></i> Generator QR Code
       </h2>
       <form id="generate-form" class="flex flex-col sm:flex-row gap-3 items-center">
-        <input
-          type="text"
-          id="generate-input"
-          placeholder="Masukkan teks untuk QR Code"
-          class="flex-grow border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          required
-        />
-        <input
-          type="number"
-          id="generate-quantity"
-          min="1"
-          value="1"
+        <input type="text" id="generate-input" placeholder="Masukkan teks untuk QR Code"
+          class="flex-grow border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required />
+        <input type="number" id="generate-quantity" min="1" value="1"
           class="w-24 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          placeholder="Jumlah"
-          required
-        />
-        <button
-          type="submit"
-          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2"
-        >
+          placeholder="Jumlah" required />
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
           <i class="fas fa-qrcode"></i> Generate
         </button>
       </form>
@@ -131,209 +96,138 @@
     </section>
   </main>
 
+  <!-- Scanner Modal -->
+  <div id="scanner-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-indigo-700">Scan QR Code</h3>
+        <button id="close-scanner" class="text-red-600 font-bold text-xl">&times;</button>
+      </div>
+      <div id="reader-modal" class="w-full border rounded overflow-hidden relative">
+        <div class="viewfinder-box"></div>
+      </div>
+      <p id="scan-message-modal" class="mt-2 text-center font-medium"></p>
+    </div>
+  </div>
+
   <script>
-    const scannedCouponsKey = "scannedCoupons";
-
-    function loadCoupons() {
-      const data = localStorage.getItem(scannedCouponsKey);
-      return data ? JSON.parse(data) : [];
-    }
-
-    function saveCoupons(coupons) {
-      localStorage.setItem(scannedCouponsKey, JSON.stringify(coupons));
-    }
-
-    function formatDate(date) {
-      return new Date(date).toLocaleString("id-ID", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
-    }
-
-    function renderCoupons() {
-      const coupons = loadCoupons();
-      const tbody = document.getElementById("coupon-list");
-      tbody.innerHTML = "";
-      coupons.forEach((coupon, i) => {
-        const tr = document.createElement("tr");
-        tr.className = i % 2 === 0 ? "bg-white" : "bg-indigo-50";
-        const statusText = coupon.sentToGoogle ? "Terkirim" : "Belum";
-        const statusClass = coupon.sentToGoogle ? "text-green-600 font-semibold" : "text-red-600 font-semibold";
-        tr.innerHTML = `
-          <td class="px-3 py-2 align-top">${i + 1}</td>
-          <td class="px-3 py-2 align-top break-words">${coupon.code}</td>
-          <td class="px-3 py-2 align-top">${formatDate(coupon.time)}</td>
-          <td class="px-3 py-2 align-top ${statusClass}">${statusText}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function showMessage(text, type = "info") {
-      const msgEl = document.getElementById("scan-message");
-      msgEl.textContent = text;
-      msgEl.className = "mt-2 text-center font-medium ";
-      if (type === "error") {
-        msgEl.classList.add("text-red-600");
-      } else if (type === "success") {
-        msgEl.classList.add("text-green-600");
-      } else {
-        msgEl.classList.add("text-gray-700");
-      }
-    }
-
-    let html5QrCode = null;
-    let scanning = false;
-
-    async function startScanner() {
-      if (scanning) return;
-      html5QrCode = new Html5Qrcode("reader");
-      const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        const coupons = loadCoupons();
-        const exists = coupons.find((c) => c.code === decodedText);
-        if (!decodedText.startsWith("GPR3-")) {
-          showMessage("QR Code tidak valid", "error"); return;
-        } else if (exists) {
-          showMessage("Kupon sudah digunakan", "error");
-          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        } else {
-          coupons.push({ code: decodedText, time: new Date().toISOString(), sentToGoogle: false });
-          saveCoupons(coupons);
-          renderCoupons();
-          showMessage("Kupon berhasil dicatat", "success");
-          if (navigator.vibrate) navigator.vibrate(200);
-        }
-      };
-
-      const config = { fps: 10, qrbox: 250 };
-
-      try {
-        const devices = await Html5Qrcode.getCameras();
-        if (devices && devices.length) {
-          let cameraId = devices[0].id;
-          for (const device of devices) {
-            if (device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("rear")) {
-              cameraId = device.id;
-              break;
-            }
-          }
-          
-          const selectedCamera = cameraId;
-          await html5QrCode.start(selectedCamera, config, qrCodeSuccessCallback);
     
-          scanning = true;
-          showMessage("Arahkan kamera ke QR Code untuk scan", "info");
-          document.getElementById("reader").classList.remove("hidden");
-          toggleScanButton(true);
-        } else {
-          showMessage("Tidak ada kamera yang ditemukan", "error");
-        }
-      } catch (err) {
-        showMessage("Error mendapatkan kamera: " + err, "error");
-      }
+const scannedCouponsKey = "scannedCoupons";
+
+function loadCoupons() {
+  const data = localStorage.getItem(scannedCouponsKey);
+  return data ? JSON.parse(data) : [];
+}
+
+function saveCoupons(coupons) {
+  localStorage.setItem(scannedCouponsKey, JSON.stringify(coupons));
+}
+
+function formatDate(date) {
+  return new Date(date).toLocaleString("id-ID", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
+function renderCoupons() {
+  const coupons = loadCoupons();
+  const tbody = document.getElementById("coupon-list");
+  tbody.innerHTML = "";
+  coupons.forEach((coupon, i) => {
+    const tr = document.createElement("tr");
+    tr.className = i % 2 === 0 ? "bg-white" : "bg-indigo-50";
+    const statusText = coupon.sentToGoogle ? "Terkirim" : "Belum";
+    const statusClass = coupon.sentToGoogle ? "text-green-600 font-semibold" : "text-red-600 font-semibold";
+    tr.innerHTML = `
+      <td class="px-3 py-2 align-top">${i + 1}</td>
+      <td class="px-3 py-2 align-top break-words">${coupon.code}</td>
+      <td class="px-3 py-2 align-top">${formatDate(coupon.time)}</td>
+      <td class="px-3 py-2 align-top ${statusClass}">${statusText}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function showMessage(text, type = "info", elementId = "scan-message") {
+  const msgEl = document.getElementById(elementId);
+  if (!msgEl) return;
+  msgEl.textContent = text;
+  msgEl.className = "mt-2 text-center font-medium ";
+  if (type === "error") {
+    msgEl.classList.add("text-red-600");
+  } else if (type === "success") {
+    msgEl.classList.add("text-green-600");
+  } else {
+    msgEl.classList.add("text-gray-700");
+  }
+}
+
+let html5QrCode = null;
+let scanning = false;
+
+async function startScanner(containerId = "reader-modal", messageId = "scan-message-modal") {
+  if (scanning) return;
+  html5QrCode = new Html5Qrcode(containerId);
+
+  const qrCodeSuccessCallback = (decodedText) => {
+    const coupons = loadCoupons();
+    const exists = coupons.find((c) => c.code === decodedText);
+    const showMessageHere = (msg, type) => showMessage(msg, type, messageId);
+
+    if (!decodedText.startsWith("GPR3-")) {
+      showMessageHere("QR Code tidak valid", "error");
+      return;
+    } else if (exists) {
+      showMessageHere("Kupon sudah digunakan", "error");
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    } else {
+      coupons.push({ code: decodedText, time: new Date().toISOString(), sentToGoogle: false });
+      saveCoupons(coupons);
+      renderCoupons();
+      showMessageHere("Kupon berhasil dicatat", "success");
+      if (navigator.vibrate) navigator.vibrate(200);
     }
+  };
 
-    async function stopScanner() {
-      if (!scanning || !html5QrCode) return;
-      try {
-        await html5QrCode.stop();
-        html5QrCode.clear();
-        scanning = false;
-        showMessage("Scan dihentikan", "info");
-        document.getElementById("reader").classList.add("hidden");
-        toggleScanButton(false);
-      } catch (err) {
-        showMessage("Gagal menghentikan scan: " + err, "error");
-      }
+  const config = { fps: 10, qrbox: 250 };
+
+  try {
+    const devices = await Html5Qrcode.getCameras();
+    if (devices.length) {
+      const cameraId = devices.find(d => d.label.toLowerCase().includes("back"))?.id || devices[0].id;
+      await html5QrCode.start(cameraId, config, qrCodeSuccessCallback);
+      scanning = true;
+    } else {
+      showMessage("Tidak ada kamera ditemukan", "error", messageId);
     }
+  } catch (err) {
+    showMessage("Error mendapatkan kamera: " + err, "error", messageId);
+  }
+}
 
-    function toggleScanButton(isScanning) {
-      const btn = document.getElementById("btn-toggle-scan");
-      if (isScanning) {
-        btn.innerHTML = '<i class="fas fa-stop"></i> Hentikan Scan';
-        btn.classList.remove("bg-indigo-600", "hover:bg-indigo-700");
-        btn.classList.add("bg-red-600", "hover:bg-red-700");
-      } else {
-        btn.innerHTML = '<i class="fas fa-play"></i> Mulai Scan';
-        btn.classList.remove("bg-red-600", "hover:bg-red-700");
-        btn.classList.add("bg-indigo-600", "hover:bg-indigo-700");
-      }
-    }
+async function stopScanner() {
+  if (!scanning || !html5QrCode) return;
+  try {
+    await html5QrCode.stop();
+    html5QrCode.clear();
+    scanning = false;
+  } catch (err) {
+    console.error("Gagal menghentikan scanner", err);
+  }
+}
 
-    document.getElementById("btn-toggle-scan").addEventListener("click", () => {
-      if (scanning) {
-        stopScanner();
-      } else {
-        startScanner();
-      }
-    });
-
-    function couponsToCSV(coupons) {
-      const header = ["No", "Kode QR", "Waktu Scan"];
-      const rows = coupons.map((c, i) => [
-        i + 1,
-        `"${c.code.replace(/"/g, '""')}"`,
-        `"${formatDate(c.time)}"`,
-      ]);
-      return header.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
-    }
-
-    async function exportCSVZip() {
-      const coupons = loadCoupons();
-      if (coupons.length === 0) {
-        alert("Belum ada kupon yang tercatat untuk diexport.");
-        return;
-      }
-      const csvContent = couponsToCSV(coupons);
-      const zip = new JSZip();
-      zip.file("kupon_gpr3.csv", csvContent);
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "kupon_gpr3.zip");
-    }
-
-    function sendCSVViaWhatsApp() {
-      const coupons = loadCoupons();
-      if (coupons.length === 0) {
-        alert("Belum ada kupon yang tercatat untuk dikirim.");
-        return;
-      }
-      const csvContent = couponsToCSV(coupons);
-      const maxLength = 1000;
-      let message = "Data Kupon GPR3:\n" + csvContent;
-      if (message.length > maxLength) {
-        message = message.slice(0, maxLength) + "\n... (data truncated)";
-      }
-      const encodedMessage = encodeURIComponent(message);
-      const waUrl = `https://wa.me/?text=${encodedMessage}`;
-      window.open(waUrl, "_blank");
-    }
-
-    function generateQRCode(text) {
-      const container = document.getElementById("generated-qrcode");
-      container.innerHTML = "";
-      QRCode.toCanvas(text, { width: 200, margin: 2 }, (err, canvas) => {
-        if (err) {
-          container.textContent = "Gagal membuat QR Code.";
-          return;
-        }
-        container.appendChild(canvas);
-      });
-    }
-
-    // Generate multiple QR codes based on quantity
-    function generateMultipleQRCodes(text, quantity) {
+function generateMultipleQRCodes(text, quantity) {
   const container = document.getElementById("generated-qrcode");
   container.innerHTML = "";
-  const maxGenerate = Math.min(quantity, 100); // Limit max to 100
-
+  const maxGenerate = Math.min(quantity, 100);
   for (let i = 1; i <= maxGenerate; i++) {
     const div = document.createElement("div");
     div.className = "flex flex-col items-center";
-
     const label = document.createElement("span");
     label.textContent = `#${i}`;
     label.className = "mb-1 text-sm text-gray-700";
@@ -346,82 +240,50 @@
       if (err) {
         div.textContent = "Gagal membuat QR Code.";
         return;
-
-          }
-        const downloadBtn = document.createElement("button");
-        downloadBtn.textContent = "Download";
-        downloadBtn.className = "mt-2 text-sm text-indigo-600 underline";
-        downloadBtn.onclick = () => {
+      }
+      const downloadBtn = document.createElement("button");
+      downloadBtn.textContent = "Download";
+      downloadBtn.className = "mt-2 text-sm text-indigo-600 underline";
+      downloadBtn.onclick = () => {
         const link = document.createElement("a");
         link.download = `${code}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
-        };
-          div.appendChild(canvas);
-          div.appendChild(downloadBtn);
-        });
-        container.appendChild(div);
-      }
-      if (quantity > 100) {
-        const note = document.createElement("p");
-        note.className = "text-red-600 mt-2 text-center text-sm";
-        note.textContent = "Maksimum 100 QR Code yang ditampilkan.";
-        container.appendChild(note);
-      }
-    }
-
-    document.getElementById("export-csv").addEventListener("click", exportCSVZip);
-    document.getElementById("send-whatsapp").addEventListener("click", sendCSVViaWhatsApp);
-    document.getElementById("send-google").addEventListener("click", sendToGoogleSheets);
-    document.getElementById("generate-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const input = document.getElementById("generate-input");
-      const quantityInput = document.getElementById("generate-quantity");
-      const quantity = parseInt(quantityInput.value, 10);
-      if (input.value.trim() === "" || isNaN(quantity) || quantity < 1) return;
-      generateMultipleQRCodes(input.value.trim(), quantity);
+      };
+      div.appendChild(canvas);
+      div.appendChild(downloadBtn);
     });
+    container.appendChild(div);
+  }
+  if (quantity > 100) {
+    const note = document.createElement("p");
+    note.className = "text-red-600 mt-2 text-center text-sm";
+    note.textContent = "Maksimum 100 QR Code yang ditampilkan.";
+    container.appendChild(note);
+  }
+}
 
-    // Google Sheets sending function (same as before)
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbxq6Xq6v6X...YOUR_DEPLOYED_SCRIPT_ID.../exec";
+document.getElementById("btn-toggle-scan").addEventListener("click", () => {
+  document.getElementById("scanner-modal").classList.remove("hidden");
+  startScanner("reader-modal", "scan-message-modal");
+});
 
-    async function sendToGoogleSheets() {
-      const coupons = loadCoupons();
-      if (coupons.length === 0) {
-        alert("Belum ada kupon yang tercatat untuk dikirim ke Google Sheets.");
-        return;
-      }
+document.getElementById("close-scanner").addEventListener("click", () => {
+  document.getElementById("scanner-modal").classList.add("hidden");
+  stopScanner();
+});
 
-      const unsentCoupons = coupons.filter(c => !c.sentToGoogle);
-      if (unsentCoupons.length === 0) {
-        alert("Semua kupon sudah terkirim ke Google Sheets.");
-        return;
-      }
+document.getElementById("generate-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = document.getElementById("generate-input");
+  const quantityInput = document.getElementById("generate-quantity");
+  const quantity = parseInt(quantityInput.value, 10);
+  if (input.value.trim() === "" || isNaN(quantity) || quantity < 1) return;
+  generateMultipleQRCodes(input.value.trim(), quantity);
+});
 
-      showMessage("Mengirim data ke Google Sheets...", "info");
+renderCoupons();
 
-      try {
-        for (const coupon of unsentCoupons) {
-          const response = await fetch(googleScriptURL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              code: coupon.code,
-              time: coupon.time,
-            }),
-          });
-          if (!response.ok) throw new Error("Gagal mengirim data ke server");
-          coupon.sentToGoogle = true;
-        }
-        saveCoupons(coupons);
-        renderCoupons();
-        showMessage("Data berhasil dikirim ke Google Sheets", "success");
-      } catch (err) {
-        showMessage("Gagal mengirim ke Google Sheets: " + err.message, "error");
-      }
-    }
-
-    renderCoupons();
   </script>
 </body>
 </html>
