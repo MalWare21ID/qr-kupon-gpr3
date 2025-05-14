@@ -189,6 +189,50 @@ async function startScanner(containerId = "reader-modal", messageId = "scan-mess
       coupons.push({ code: decodedText, time: new Date().toISOString(), sentToGoogle: false });
       saveCoupons(coupons);
       renderCoupons();
+
+function couponsToCSV(coupons) {
+  const header = ["No", "Kode QR", "Waktu Scan"];
+  const rows = coupons.map((c, i) => [
+    i + 1,
+    `"${c.code.replace(/"/g, '""')}"`,
+    `"${formatDate(c.time)}"`,
+  ]);
+  return header.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
+}
+
+async function exportCSVZip() {
+  const coupons = loadCoupons();
+  if (coupons.length === 0) {
+    alert("Belum ada kupon yang tercatat untuk diexport.");
+    return;
+  }
+  const csvContent = couponsToCSV(coupons);
+  const zip = new JSZip();
+  zip.file("kupon_gpr3.csv", csvContent);
+  const content = await zip.generateAsync({ type: "blob" });
+  saveAs(content, "kupon_gpr3.zip");
+}
+
+function sendCSVViaWhatsApp() {
+  const coupons = loadCoupons();
+  if (coupons.length === 0) {
+    alert("Belum ada kupon yang tercatat untuk dikirim.");
+    return;
+  }
+  const csvContent = couponsToCSV(coupons);
+  const maxLength = 1000;
+  let message = "Data Kupon GPR3:\n" + csvContent;
+  if (message.length > maxLength) {
+    message = message.slice(0, maxLength) + "\n... (data terpotong)";
+  }
+  const encodedMessage = encodeURIComponent(message);
+  const waUrl = `https://wa.me/?text=${encodedMessage}`;
+  window.open(waUrl, "_blank");
+}
+
+document.getElementById("export-csv").addEventListener("click", exportCSVZip);
+document.getElementById("send-whatsapp").addEventListener("click", sendCSVViaWhatsApp);
+
       showMessageHere("Kupon berhasil dicatat", "success");
       if (navigator.vibrate) navigator.vibrate(200);
     }
@@ -283,6 +327,50 @@ document.getElementById("generate-form").addEventListener("submit", (e) => {
 });
 
 renderCoupons();
+
+function couponsToCSV(coupons) {
+  const header = ["No", "Kode QR", "Waktu Scan"];
+  const rows = coupons.map((c, i) => [
+    i + 1,
+    `"${c.code.replace(/"/g, '""')}"`,
+    `"${formatDate(c.time)}"`,
+  ]);
+  return header.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
+}
+
+async function exportCSVZip() {
+  const coupons = loadCoupons();
+  if (coupons.length === 0) {
+    alert("Belum ada kupon yang tercatat untuk diexport.");
+    return;
+  }
+  const csvContent = couponsToCSV(coupons);
+  const zip = new JSZip();
+  zip.file("kupon_gpr3.csv", csvContent);
+  const content = await zip.generateAsync({ type: "blob" });
+  saveAs(content, "kupon_gpr3.zip");
+}
+
+function sendCSVViaWhatsApp() {
+  const coupons = loadCoupons();
+  if (coupons.length === 0) {
+    alert("Belum ada kupon yang tercatat untuk dikirim.");
+    return;
+  }
+  const csvContent = couponsToCSV(coupons);
+  const maxLength = 1000;
+  let message = "Data Kupon GPR3:\n" + csvContent;
+  if (message.length > maxLength) {
+    message = message.slice(0, maxLength) + "\n... (data terpotong)";
+  }
+  const encodedMessage = encodeURIComponent(message);
+  const waUrl = `https://wa.me/?text=${encodedMessage}`;
+  window.open(waUrl, "_blank");
+}
+
+document.getElementById("export-csv").addEventListener("click", exportCSVZip);
+document.getElementById("send-whatsapp").addEventListener("click", sendCSVViaWhatsApp);
+
 
   </script>
 </body>
