@@ -1,22 +1,457 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QR Code Kupon GPR3</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <style>
+    .viewfinder-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      margin-left: -100px;
+      margin-top: -100px;
+      border: 3px solid rgba(99, 102, 241, 0.8);
+      box-sizing: border-box;
+      z-index: 10;
+      border-radius: 8px;
+    }
+  </style>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  h1, h2 {
+    letter-spacing: -0.5px;
+  }
+
+  button {
+    transition: all 0.2s ease-in-out;
+  }
+
+  button:hover {
+    transform: scale(1.03);
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .rounded-section {
+    border-radius: 1rem;
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4f46e5;
+  }
+
+  .table-container {
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .qr-preview {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .qr-preview:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  #generated-qrcode > div {
+    flex: 1 1 150px;
+  }
+
+  #reader-modal {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 640px) {
+    .card {
+      padding: 1rem;
+    }
+  }
+</style>
+
+
+<style>
+  body {
+    font-family: 'Noto Sans', 'Segoe UI', Tahoma, sans-serif;
+    background-color: #fdfcf9;
+  }
+
+  h1, h2 {
+    font-family: 'Scheherazade New', serif;
+  }
+
+  h1 {
+    color: #1e7f5c;
+  }
+
+  .section-title {
+    font-family: 'Scheherazade New', serif;
+    color: #1e7f5c;
+  }
+
+  button {
+    background-color: #1e7f5c;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #166644;
+    transform: scale(1.03);
+  }
+
+  .bg-white {
+    background-color: #ffffff;
+    border: 1px solid #d1fae5;
+  }
+
+  .card, .qr-preview {
+    border-radius: 1rem;
+    border: 1px solid #d1fae5;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  #generated-qrcode > div {
+    flex: 1 1 150px;
+    background-color: #ecfdf5;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .viewfinder-box {
+    border-color: #10b981 !important;
+  }
+
+  thead {
+    background-color: #d1fae5;
+  }
+
+  #scanner-modal {
+    backdrop-filter: blur(3px);
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@600&display=swap" rel="stylesheet">
+
+
+<style>
+  .islamic-pattern {
+    background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+  }
+
+  .header-decor {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Islamic_geometric_013.svg/2560px-Islamic_geometric_013.svg.png') no-repeat center;
+    background-size: contain;
+    height: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .footer-decor {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Islamic_geometric_004.svg/1920px-Islamic_geometric_004.svg.png') no-repeat center;
+    background-size: contain;
+    height: 100px;
+    margin-top: 2rem;
+    opacity: 0.5;
+  }
+</style>
+
 </head>
-<body>
-  <!-- Konten HTML dan Modal Scanner seperti sebelumnya -->
-  <!-- ... Dihilangkan untuk singkat, karena kita fokus pada hasil akhir ... -->
+<body class="bg-gray-50 min-h-screen flex flex-col items-center p-4 font-sans">
+  
+<div class="header-decor w-full max-w-xl"></div>
+<header class="w-full max-w-xl text-center mb-6">
+    <h1 class="text-3xl font-bold text-indigo-700">Scan Kupon Idul Adha GPR3</h1>
+  </header>
+
+  <main class="w-full max-w-xl bg-white rounded-lg shadow p-6 space-y-6">
+    <section>
+      <h2 class="text-xl font-semibold mb-2 text-indigo-600 flex items-center gap-2">
+        <i class="fas fa-qrcode"></i> Scan QR Code
+      </h2>
+      <div class="flex justify-center mb-3">
+        <button id="btn-toggle-scan" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
+          <i class="fas fa-play"></i> Mulai Scan
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold mb-2 text-indigo-600 flex items-center gap-2">
+        <i class="fas fa-list"></i> Kupon Tercatat
+      </h2>
+      <div class="overflow-x-auto max-h-48 border border-gray-300 rounded">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-indigo-100 sticky top-0">
+            <tr>
+              <th class="px-3 py-2">No</th>
+              <th class="px-3 py-2">Kode QR</th>
+              <th class="px-3 py-2">Waktu Scan</th>
+              <th class="px-3 py-2">Status Kirim</th>
+            </tr>
+          </thead>
+          <tbody id="coupon-list" class="divide-y divide-gray-200 max-h-48 overflow-y-auto"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <button id="export-csv" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
+        <i class="fas fa-file-csv"></i> Export CSV
+      </button>
+      <button id="send-whatsapp" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+        <i class="fab fa-whatsapp"></i> Kirim CSV via WhatsApp
+      </button>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold mb-2 text-indigo-600 flex items-center gap-2">
+        <i class="fas fa-qrcode"></i> Generator QR Code
+      </h2>
+      <form id="generate-form" class="flex flex-col sm:flex-row gap-3 items-center">
+        <input type="text" id="generate-input" placeholder="Masukkan teks untuk QR Code"
+          class="flex-grow border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required />
+        <input type="number" id="generate-quantity" min="1" value="1"
+          class="w-24 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder="Jumlah" required />
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow flex items-center gap-2">
+          <i class="fas fa-qrcode"></i> Generate
+        </button>
+      </form>
+      <div id="generated-qrcode" class="mt-4 flex flex-wrap justify-center gap-4"></div>
+    </section>
+  </main>
+
+  <Modal scanner >
+  <div id="scanner-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-indigo-700">Scan QR Code</h3>
+        <button id="close-scanner" class="text-red-600 font-bold text-xl">&times;</button>
+      </div>
+      <div id="reader-modal" class="w-full border rounded overflow-hidden relative">
+        <div class="viewfinder-box"></div>
+      </div>
+      <p id="scan-message-modal" class="mt-2 text-center font-medium"></p>
+    </div>
+  </div>
 
   <script>
-    const googleScriptURL = "https://script.google.com/macros/s/AKfycbyIWGlJbP-4a4eENfDWAIdN-uAg7DHSKhfzlvbtXtN3OGLRkGu60kq1Ze42GWLIUlNj/exec";
+    const googleScriptURL = "https://script.google.com/macros/s/AKfycbyTcBvDC4TESVJRwuW40p7urYWMpWlgq9LqLxMwQPRRhRc-iLEqX89MptuzI3I5jq6J/exec";
+    const scannedCouponsKey = "scannedCoupons";
+
+    function loadCoupons() {
+      const data = localStorage.getItem(scannedCouponsKey);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveCoupons(coupons) {
+      localStorage.setItem(scannedCouponsKey, JSON.stringify(coupons));
+    }
+
+    function formatDate(date) {
+      return new Date(date).toLocaleString("id-ID", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    }
+
+    function renderCoupons() {
+      const coupons = loadCoupons();
+      const tbody = document.getElementById("coupon-list");
+      tbody.innerHTML = "";
+      coupons.forEach((coupon, i) => {
+        const tr = document.createElement("tr");
+        tr.className = i % 2 === 0 ? "bg-white" : "bg-indigo-50";
+        const statusText = coupon.sentToGoogle ? "Terkirim" : "Belum";
+        const statusClass = coupon.sentToGoogle ? "text-green-600 font-semibold" : "text-red-600 font-semibold";
+        tr.innerHTML = `
+          <td class="px-3 py-2 align-top">${i + 1}</td>
+          <td class="px-3 py-2 align-top break-words">${coupon.code}</td>
+          <td class="px-3 py-2 align-top">${formatDate(coupon.time)}</td>
+          <td class="px-3 py-2 align-top ${statusClass}">${statusText}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function showMessage(text, type = "info", elementId = "scan-message-modal") {
+      const msgEl = document.getElementById(elementId);
+      if (!msgEl) return;
+      msgEl.textContent = text;
+      msgEl.className = "mt-2 text-center font-medium ";
+      if (type === "error") msgEl.classList.add("text-red-600");
+      else if (type === "success") msgEl.classList.add("text-green-600");
+      else msgEl.classList.add("text-gray-700");
+    }
+
+    let html5QrCode = null;
+    let scanning = false;
+
+    async function startScanner(containerId = "reader-modal", messageId = "scan-message-modal") {
+      if (scanning) return;
+      html5QrCode = new Html5Qrcode(containerId);
+      const qrCodeSuccessCallback = (decodedText) => {
+        const coupons = loadCoupons();
+        const exists = coupons.find((c) => c.code === decodedText);
+        const showMessageHere = (msg, type) => showMessage(msg, type, messageId);
+
+        if (!decodedText.startsWith("GPR3-")) {
+          showMessageHere("QR Code tidak valid", "error");
+        } else if (exists) {
+          showMessageHere("Kupon sudah digunakan", "error");
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        } else {
+          const newCoupon = { code: decodedText, time: new Date().toISOString(), sentToGoogle: true };
+          coupons.push(newCoupon);
+          saveCoupons(coupons);
+          renderCoupons();
+          showMessageHere("Kupon berhasil dicatat", "success");
+          if (navigator.vibrate) navigator.vibrate(200);
+          fetch(googleScriptURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: newCoupon.code, time: newCoupon.time }),
+          }).catch(err => console.error("Gagal kirim ke Google Sheets", err));
+        }
+      };
+
+      const config = { fps: 10, qrbox: 250 };
+      const devices = await Html5Qrcode.getCameras();
+      if (devices.length) {
+        const cameraId = devices.find(d => d.label.toLowerCase().includes("back"))?.id || devices[0].id;
+        await html5QrCode.start(cameraId, config, qrCodeSuccessCallback);
+        scanning = true;
+      } else {
+        showMessage("Tidak ada kamera ditemukan", "error", messageId);
+      }
+    }
+
+    async function stopScanner() {
+      if (!scanning || !html5QrCode) return;
+      await html5QrCode.stop();
+      html5QrCode.clear();
+      scanning = false;
+    }
+
+    document.getElementById("btn-toggle-scan").addEventListener("click", () => {
+      document.getElementById("scanner-modal").classList.remove("hidden");
+      startScanner();
+    });
+    document.getElementById("close-scanner").addEventListener("click", () => {
+      document.getElementById("scanner-modal").classList.add("hidden");
+      stopScanner();
+    });
+    document.getElementById("generate-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = document.getElementById("generate-input");
+      const qty = parseInt(document.getElementById("generate-quantity").value);
+      generateMultipleQRCodes(input.value.trim(), qty);
+    });
+
+    function generateMultipleQRCodes(text, quantity) {
+      const container = document.getElementById("generated-qrcode");
+      container.innerHTML = "";
+      const maxGenerate = Math.min(quantity, 100);
+      for (let i = 1; i <= maxGenerate; i++) {
+        const div = document.createElement("div");
+        div.className = "flex flex-col items-center";
+        const label = document.createElement("span");
+        label.textContent = `#${i}`;
+        label.className = "mb-1 text-sm text-gray-700";
+        const canvas = document.createElement("canvas");
+        const code = `GPR3-${text}-${String(i).padStart(3, "0")}`;
+        QRCode.toCanvas(canvas, code, { width: 150, margin: 2 }, (err) => {
+          if (!err) {
+            const downloadBtn = document.createElement("button");
+            downloadBtn.textContent = "Download";
+            downloadBtn.className = "mt-2 text-sm text-indigo-600 underline";
+            downloadBtn.onclick = () => {
+              const link = document.createElement("a");
+              link.download = `${code}.png`;
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            };
+            div.appendChild(label);
+            div.appendChild(canvas);
+            div.appendChild(downloadBtn);
+          }
+        });
+        container.appendChild(div);
+      }
+    }
+
+    function couponsToCSV(coupons) {
+      const header = ["No", "Kode QR", "Waktu Scan"];
+      const rows = coupons.map((c, i) => [i + 1, `"${c.code}"`, `"${formatDate(c.time)}"`]);
+      return header.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+    }
+
+    async function exportCSVZip() {
+      const coupons = loadCoupons();
+      if (!coupons.length) return alert("Tidak ada data.");
+      const csvContent = couponsToCSV(coupons);
+      const zip = new JSZip();
+      zip.file("kupon_gpr3.csv", csvContent);
+      const blob = await zip.generateAsync({ type: "blob" });
+      saveAs(blob, "kupon_gpr3.zip");
+    }
+
+    function sendCSVViaWhatsApp() {
+      const coupons = loadCoupons();
+      if (!coupons.length) return alert("Tidak ada data.");
+      const csv = couponsToCSV(coupons);
+      let message = "Data Kupon GPR3:\n" + csv;
+      if (message.length > 1000) message = message.slice(0, 1000) + "\n... (terpotong)";
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
+    }
+
+    document.getElementById("export-csv").addEventListener("click", exportCSVZip);
+    document.getElementById("send-whatsapp").addEventListener("click", sendCSVViaWhatsApp);
+
+    renderCoupons();
+  </script>
+
+<div class="footer-decor w-full max-w-xl"></div>
+
+</body>
+</html>
     // Sisanya seperti script JavaScript dari versi sebelumnya...
     // (Untuk singkat, bagian ini seharusnya adalah seluruh script lengkap dari langkah sebelumnya)
   </script>
